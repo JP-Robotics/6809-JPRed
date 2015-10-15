@@ -7,8 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by benjaminwilkinson on 10/10/15.
  * Intended for test tetrix robot to experiment with different drive trains
- * TODO: Verify that OPMode works with robot
- * TODO: Confirm that Wi-Fi direct works only after robot is configured
+ * TODO: Fix crash when a motor is missing
  */
 
 
@@ -25,19 +24,18 @@ public class TankDrive6 extends OpMode
     //All usable OpMode functions added, even if unused
     public void init()
     {
-        return;
-    }
-    public void start()
-    {
-        //In K9Tankdrive, this is in the init function. Does it work here?
         motorLeftFront = hardwareMap.dcMotor.get("leftFront");      motorRightFront    = hardwareMap.dcMotor.get("rightFront");
-        motorLeftMiddle = hardwareMap.dcMotor.get("leftMiddle");    motorRightMiddle   = hardwareMap.dcMotor.get("rightMiddle");
+        //motorLeftMiddle = hardwareMap.dcMotor.get("leftMiddle");    motorRightMiddle   = hardwareMap.dcMotor.get("rightMiddle");
         motorLeftBack = hardwareMap.dcMotor.get("leftBack");        motorRightBack     = hardwareMap.dcMotor.get("rightBack");
 
         //since motors are mounted facing in, the right motors should be reversed, right?
         motorRightFront.setDirection(DcMotor.Direction.REVERSE);
-        motorRightMiddle.setDirection(DcMotor.Direction.REVERSE);
+        //motorRightMiddle.setDirection(DcMotor.Direction.REVERSE);
         motorRightBack.setDirection(DcMotor.Direction.REVERSE);
+        return;
+    }
+    public void start()
+    {
         return;
     }
     public void loop()//won't modify motor, servo, or sensor values until loop ends...same for other functions?
@@ -59,7 +57,7 @@ public class TankDrive6 extends OpMode
 
         // write the values to the motors
         motorLeftFront.setPower(left);          motorRightFront.setPower(right);
-        motorLeftMiddle.setPower(left);         motorRightMiddle.setPower(right);
+        //motorLeftMiddle.setPower(left);         motorRightMiddle.setPower(right);
         motorLeftBack.setPower(left);           motorRightBack.setPower(right);
 
         // telemetry data
