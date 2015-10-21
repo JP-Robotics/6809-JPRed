@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by benjaminwilkinson on 10/10/15.
  * Intended for test tetrix robot to experiment with different drive trains
- * TODO: Fix crash when a motor is missing
+ * TODO: Extend exception handling to all motors
  */
 
 
@@ -25,7 +25,17 @@ public class TankDrive6 extends OpMode
     public void init()
     {
         motorLeftFront = hardwareMap.dcMotor.get("leftFront");      motorRightFront    = hardwareMap.dcMotor.get("rightFront");
-        //motorLeftMiddle = hardwareMap.dcMotor.get("leftMiddle");    motorRightMiddle   = hardwareMap.dcMotor.get("rightMiddle");
+        //the middle motors will not always be attatched.  Hopefully, this code will prevent this from being a fatal error.
+        try {
+            motorLeftMiddle = hardwareMap.dcMotor.get("leftMiddle");
+        }
+        catch (Exception e){telemetry.addData("ExceptionLM","DcMotor 'leftMiddle' is missing");}
+
+        try {
+            motorRightMiddle   = hardwareMap.dcMotor.get("rightMiddle");
+        }
+            catch (Exception e) {telemetry.addData("ExceptionRM","DcMotor 'rightMiddle' is missing");}
+
         motorLeftBack = hardwareMap.dcMotor.get("leftBack");        motorRightBack     = hardwareMap.dcMotor.get("rightBack");
 
         //since motors are mounted facing in, the right motors should be reversed, right?
