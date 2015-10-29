@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by benjaminwilkinson on 10/10/15.
  * Intended for test tetrix robot to experiment with different drive trains
- * TODO: Extend exception handling to all motors
  */
 
 
@@ -24,23 +23,33 @@ public class TankDrive6 extends OpMode
     //All usable OpMode functions added, even if unused
     public void init()
     {
-        motorLeftFront = hardwareMap.dcMotor.get("leftFront");      motorRightFront    = hardwareMap.dcMotor.get("rightFront");
-        //the middle motors will not always be attatched.  Hopefully, this code will prevent this from being a fatal error.
+        /*
+        *the same motors will not always be attached since this is a test model.
+        * This code will prevent a missing motor from crashing the program.
+        */
+        try{
+            motorLeftFront = hardwareMap.dcMotor.get("leftFront");
+        } catch (Exception e) {telemetry.addData("ExceptionLF","DcMotor 'leftFront' is missing");motorLeftFront = null;}
+        try{
+            motorRightFront = hardwareMap.dcMotor.get("rightFront");
+        } catch (Exception e) {telemetry.addData("ExceptionRF","DcMotor 'rightFront' is missing");}
         try {
             motorLeftMiddle = hardwareMap.dcMotor.get("leftMiddle");
-        }
-        catch (Exception e){telemetry.addData("ExceptionLM","DcMotor 'leftMiddle' is missing");}
-
+        } catch (Exception e){telemetry.addData("ExceptionLM","DcMotor 'leftMiddle' is missing");}
         try {
-            motorRightMiddle   = hardwareMap.dcMotor.get("rightMiddle");
-        }
-            catch (Exception e) {telemetry.addData("ExceptionRM","DcMotor 'rightMiddle' is missing");}
+            motorRightMiddle = hardwareMap.dcMotor.get("rightMiddle");
+        } catch (Exception e) {telemetry.addData("ExceptionRM","DcMotor 'rightMiddle' is missing");}
+        try{
+            motorLeftBack = hardwareMap.dcMotor.get("leftBack");
+        } catch (Exception e) {telemetry.addData("ExceptionLB","DcMotor 'leftBack' is missing");}
+        try {
+            motorRightBack = hardwareMap.dcMotor.get("rightBack");
+        }catch (Exception e) {telemetry.addData("ExceptionRB","DcMotor 'rightBack' is missing");}
 
-        motorLeftBack = hardwareMap.dcMotor.get("leftBack");        motorRightBack     = hardwareMap.dcMotor.get("rightBack");
 
-        //since motors are mounted facing in, the right motors should be reversed, right?
+        //since motors are mounted facing in, the right motors should be reversed by default
         motorRightFront.setDirection(DcMotor.Direction.REVERSE);
-        //motorRightMiddle.setDirection(DcMotor.Direction.REVERSE);
+        motorRightMiddle.setDirection(DcMotor.Direction.REVERSE);
         motorRightBack.setDirection(DcMotor.Direction.REVERSE);
         return;
     }
