@@ -13,6 +13,8 @@ public class TeleOp extends OpMode
 {
     DcMotor motorLeftFront;         DcMotor motorRightFront;
     DcMotor motorLeftBack;          DcMotor motorRightBack;
+
+    DcMotor motorCollection;
     public void init()
     {
         /*
@@ -30,11 +32,15 @@ public class TeleOp extends OpMode
         try {
             motorRightBack = hardwareMap.dcMotor.get("rightBack");
         }catch (Exception e) {telemetry.addData("ExceptionRB","DcMotor 'rightBack' is missing");}
-
+        //added 'Collection' motor here
+        try {
+            motorCollection = hardwareMap.dcMotor.get("collection");
+        }catch (Exception e) {telemetry.addData("ExceptionRB","DcMotor 'collection' is missing");}
 
         //since motors are mounted facing in, the right motors should be reversed by default
-        motorRightFront.setDirection(DcMotor.Direction.REVERSE);
-        motorRightBack.setDirection(DcMotor.Direction.REVERSE);
+        motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
+        motorLeftBack.setDirection(DcMotor.Direction.REVERSE);
+        motorCollection.setDirection(DcMotor.Direction.REVERSE);
         return;
     }
     public void start()
@@ -71,7 +77,22 @@ public class TeleOp extends OpMode
         telemetry.addData("left_Power","Left Power: "+ left);
         telemetry.addData("right_Power","Right Power: "+ right);
 
-        return;
+
+        boolean collectionOn = false;
+        if (gamepad1.right_trigger >= 0.75 || gamepad1.left_trigger >= 0.75)
+        {
+            motorCollection.setPower(1.0);
+            collectionOn = true;
+        }
+        if (gamepad1.right_bumper || gamepad1.left_bumper)
+        {
+            motorCollection.setPower(-1.0);
+            collectionOn = true;
+        }
+        if (collectionOn == false)
+        {
+            motorCollection.setPower(0.0);
+        }
     }
     public void stop()
     {
