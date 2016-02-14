@@ -2,25 +2,27 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by benjaminwilkinson on 10/10/15.
- * Intended for test tetrix robot to experiment with different drive trains
+ * Lanier Project
  */
 
 
-public class TankDrive6 extends OpMode
+public class LanierTeleOp extends OpMode
 {
     //These statements create motor references. Name your motors carefully
     // This is what you call them when programming, not neccessarily what they are called on the phones.
     DcMotor motorLeftFront;
     DcMotor motorRightFront;
-    DcMotor motorLeftMiddle;
-    DcMotor motorRightMiddle;
     DcMotor motorLeftBack;
     DcMotor motorRightBack;
+    DcMotor motorArm;
 
+    Servo Servozero;
     public void init()
     {
         /*
@@ -33,8 +35,21 @@ public class TankDrive6 extends OpMode
         //Below, where you see motors in the format "motorLeftBack" are my names. You need to substitute your own.
         //
 
-            motorLeftFront = hardwareMap.dcMotor.get("leftFront");
+        motorLeftFront = hardwareMap.dcMotor.get("DC motor_1");
+        motorLeftBack = hardwareMap.dcMotor.get("DC motor_2");
+        motorRightFront = hardwareMap.dcMotor.get("DC motor_3");
+        motorRightBack = hardwareMap.dcMotor.get("DC motor_4");
+        //try{
+        /*motorArm = hardwareMap.dcMotor.get("DC motor_5");}
+        catch (Exception e)
+        {
+            telemetry.addData("Error","Please name the arm 'DC motor_6'");
+        }*/
 
+        //Servozero = hardwareMap.servo.get("Servo 1");//from zero to one
+
+        motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
+        motorLeftBack.setDirection(DcMotor.Direction.REVERSE);
         return;
     }
 
@@ -63,10 +78,18 @@ public class TankDrive6 extends OpMode
         // write the values to the motors
         motorLeftFront.setPower(left);
         motorRightFront.setPower(right);
-        //motorLeftMiddle.setPower(left);         motorRightMiddle.setPower(right);
+        motorLeftBack.setPower(left);
+        motorRightBack.setPower(right);
+        //motorArm.setPower(gamepad2.right_stick_y/2);
 
-
-
+        /*if (gamepad2.right_trigger >= 0.75)
+        {
+            Servozero.setPosition(0.0);
+        }
+        else
+        {
+            Servozero.setPosition(1.0);
+        }*/
 
         // telemetry data
         // The string after the comma is displayed

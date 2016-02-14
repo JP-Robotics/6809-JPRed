@@ -56,9 +56,11 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
 
     manager.register("NullOp", NullOp.class);
-    manager.register("TankDrive6", TankDrive6.class);
+    //manager.register("Lanier TeleOp", LanierTeleOp.class);
+    //manager.register("TankDrive6", TankDrive6.class);
     manager.register("TeleOp", TeleOp.class);
-
+    manager.register("AutoPark,Straight", AutonomousParking.class);
+    manager.register("AutonomousSensors",AutonomousBeacon.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */

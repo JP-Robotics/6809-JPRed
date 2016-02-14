@@ -14,9 +14,8 @@ public class TeleOp extends OpMode
     DcMotor motorLeftFront;         DcMotor motorRightFront;
     DcMotor motorLeftBack;          DcMotor motorRightBack;
 
-    DcMotor motorCollection;
-    public void init()
-    {
+    DcMotor motorCollection;        DcMotor motorScoring;
+    public void motorRegistration(){
         /*
         * This code will prevent a missing motor from crashing the program.
         */
@@ -35,13 +34,21 @@ public class TeleOp extends OpMode
         //added 'Collection' motor here
         try {
             motorCollection = hardwareMap.dcMotor.get("collection");
-        }catch (Exception e) {telemetry.addData("ExceptionRB","DcMotor 'collection' is missing");}
-
+        }catch (Exception e) {telemetry.addData("ExceptionC","DcMotor 'collection' is missing");}
+        //added 'Scoring' motor here
+        try {
+            motorScoring = hardwareMap.dcMotor.get("scoring");
+        }catch (Exception e) {telemetry.addData("ExceptionS","DcMotor 'scoring' is missing");}
         //since motors are mounted facing in, the right motors should be reversed by default
         motorLeftFront.setDirection(DcMotor.Direction.REVERSE);
         motorLeftBack.setDirection(DcMotor.Direction.REVERSE);
         motorCollection.setDirection(DcMotor.Direction.REVERSE);
+        motorScoring.setDirection(DcMotor.Direction.REVERSE);
         return;
+    }       // Must update AutonomousBeacon
+    public void init()
+    {
+        motorRegistration();
     }
     public void start()
     {
@@ -52,8 +59,8 @@ public class TeleOp extends OpMode
         //This code was copied from K9TankDrive. Will be written from scratch for later programs
 
         // note that if y equal -1 then joystick is pushed all of the way forward.
-        float left = -gamepad1.left_stick_y;
-        float right = -gamepad1.right_stick_y;
+        float left = gamepad1.left_stick_y;
+        float right = gamepad1.right_stick_y;
 
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
@@ -68,9 +75,24 @@ public class TeleOp extends OpMode
         motorLeftFront.setPower(left);          motorRightFront.setPower(right);
         motorLeftBack.setPower(left);           motorRightBack.setPower(right);
 
+        boolean brushesAreOn = false;
+        if (gamepad1.a^gamepad2.a)
+        {
+            brushesAreOn = true;
+            motorCollection.setPower(1.0);
+        }
+        if (gamepad1.b^gamepad2.b)
+        {
+            brushesAreOn = true;
+            motorCollection.setPower(-1.0);
+        }
+        if (brushesAreOn == false)
+        {motorCollection.setPower(0.0);}
+
         // telemetry data
         // The string after the comma is displayed
-        telemetry.addData("Header","###Debug Data###");
+        telemetry.addData("Header","###Proffessor Noodles###");
+        telemetry.addData("Header2","\tSystem Data");
         telemetry.addData("left_Stick","Left Joystick: "+ gamepad1.left_stick_y);
         telemetry.addData("right_Stick","Right Joystick: "+ gamepad1.right_stick_y);
         telemetry.addData("Space","");
@@ -79,19 +101,19 @@ public class TeleOp extends OpMode
 
 
         boolean collectionOn = false;
-        if (gamepad1.right_trigger >= 0.75 || gamepad1.left_trigger >= 0.75)
+        if ((gamepad1.right_trigger >= 0.75) ^ (gamepad2.right_trigger >= 0.75))
         {
-            motorCollection.setPower(1.0);
+            motorScoring.setPower(0.50);
             collectionOn = true;
         }
-        if (gamepad1.right_bumper || gamepad1.left_bumper)
+        if ((gamepad1.left_trigger >=0.75) ^ (gamepad2.left_trigger >=0.75))
         {
-            motorCollection.setPower(-1.0);
+            motorScoring.setPower(-0.50);
             collectionOn = true;
         }
         if (collectionOn == false)
         {
-            motorCollection.setPower(0.0);
+            motorScoring.setPower(0.0);
         }
     }
     public void stop()
